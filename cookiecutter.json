@@ -3,6 +3,9 @@
     "repo_name": "{{cookiecutter.project_name.lower().strip().replace(' ', '_').replace(':', '_').replace('-', '_').replace('!', '_')}}",
     "template_language": ["jinja2", "chameleon", "mako"],
     "backend": ["none", "sqlalchemy", "zodb"],
+    "rest_framework": ["none", "cornice"],
+    "schemas": ["none", "marshmallow"],
+    "authentication": ["none", "jwt"],
     "_copy_without_render": [
         "static/*"
     ]

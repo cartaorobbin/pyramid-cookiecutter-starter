@@ -11,8 +11,12 @@ python = "^3.11"
 plaster_pastedeploy
 pyramid
 pyramid_{{ cookiecutter.template_language }}
+pyramid-retry
 pyramid_debugtoolbar
+pyramid-auto-env
 waitress
+gunicorn
+pyramid-services
 {%- if cookiecutter.backend == 'sqlalchemy' %}
 alembic
 pyramid_retry
@@ -26,6 +30,17 @@ pyramid_tm
 pyramid_zodbconn',
 transaction
 ZODB
+{%- endif %}
+{%- if cookiecutter.rest_framework == 'cornice' %}
+cornice
+pycornmarsh
+{%- endif %}
+{%- if cookiecutter.schemas == 'marshmallow' %}
+marshmallow
+{%- endif %}
+{%- if cookiecutter.authentication == 'jwt' %}
+pyramid-jwt
+pyjwt = {extras = ["crypto"], version = "*"}
 {%- endif %}
 
 [tool.poetry.group.dev.dependencies]
