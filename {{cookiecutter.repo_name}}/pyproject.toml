@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "{{cookiecutter.repo_name}}"
+version = "0.1.0"
+description = ""
+authors = ["Robbin Dev Team <dev@robbin.com.br>"]
+readme = "README.md"
+packages = [{include = "{{cookiecutter.repo_name}}"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+plaster_pastedeploy
+pyramid
+pyramid_{{ cookiecutter.template_language }}
+pyramid_debugtoolbar
+waitress
+{%- if cookiecutter.backend == 'sqlalchemy' %}
+alembic
+pyramid_retry
+pyramid_tm
+SQLAlchemy
+transaction
+zope.sqlalchemy
+{%- elif cookiecutter.backend == 'zodb' %}
+pyramid_retry
+pyramid_tm
+pyramid_zodbconn',
+transaction
+ZODB
+{%- endif %}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+tox = "^4.6.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
