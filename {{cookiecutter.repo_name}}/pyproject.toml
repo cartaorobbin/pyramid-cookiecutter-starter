@@ -44,8 +44,15 @@ pyjwt = {extras = ["crypto"], version = "*"}
 {%- endif %}
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-tox = "^4.6.4"
+pytest = "*"
+pytest-cov = "*"
+black = "*"
+webtest = "*"
+{%- if cookiecutter.backend == 'sqlalchemy' %}
+testing-postgresql = "*"
+factory-boy = "*"
+pytest-factoryboy = "*"
+{%- endif %}
 
 [build-system]
 requires = ["poetry-core"]
