@@ -50,3 +50,6 @@ tox = "^4.6.4"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.plugins."paste.app_factory"]
+main = "{{cookiecutter.repo_name}}:main"
