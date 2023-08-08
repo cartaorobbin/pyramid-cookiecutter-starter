@@ -2,7 +2,7 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.245.0/containers/ubuntu
 {
 	"name": "Ubuntu",
-	"dockerComposeFile": ["docker-compose.yml"],
+	"dockerComposeFile": ["../.devcontainer-docker-compose.yml"],
 	"service": "dev-service",
 	"workspaceFolder": "/workspace",
 	// 	// Use ubuntu-22.04 or ubuntu-18.04 on local arm64/Apple Silicon.
@@ -19,7 +19,7 @@
 	// "runArgs": ["--env-file",".devcontainer/devcontainer.env"],
 
 	// Comment out to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "vscode",
+	"remoteUser": "root",
 	"customizations": {
 		// Configure properties specific to VS Code.
 		"vscode": {
@@ -51,10 +51,5 @@
 		"docker-in-docker": "latest",
 		"python": "3.11.3",
 		"ghcr.io/devcontainers-contrib/features/poetry:2": {},
-		{%- if cookiecutter.backend == 'sqlalchemy' %}
-		"ghcr.io/devcontainers-contrib/features/postgres-asdf:1": {
-			"version": "latest"
-		}
-		{%- endif %}
 	}
 }
