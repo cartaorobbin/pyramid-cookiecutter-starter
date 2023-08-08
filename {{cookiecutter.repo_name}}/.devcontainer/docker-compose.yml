@@ -9,36 +9,14 @@ services:
       dockerfile: Dockerfile
       args:
         VARIANT: "ubuntu-22.04"
-    links:
-      - redis:rs
-      - postgres:postgresdb
+
     volumes:
       - /Users/tomas/Documents/workspace/business-pipeline:/workspace:cached
     command: /bin/sh -c "while sleep 1000; do :; done"
     networks:
       - internal
 
-  conductor:
-    build:
-      context: ../.
-      dockerfile: conductor/Dockerfile
-    depends_on:
-      - postgres
-      - redis
-    links:
-      - redis:rediss
-      - postgres:postgresdb
-    ports:
-      - "1234:5000"
-      - "8080:8080"
-    networks:
-      - internal
-    environment:
-      # - DO_NOT_START_APP=true
-      # - CONFIG_PROP=config-postgres.properties
-      - CONDUCTOR_REDIS_HOST=redis:6379:1
-      - CONDUCTOR_REDIS_LOCK_SERVER_ADDRESS=redis://redis:6379
-
+{%- if cookiecutter.backend == 'sqlalchemy' %}
   postgres:
     # container_name: postgres_container
     image: postgres:15.3
@@ -54,7 +32,9 @@ services:
     networks:
       - internal
     restart: unless-stopped
-  
+
+{%- endif %}
+
   redis:
     image: redis:6.2-alpine
     restart: always
@@ -72,5 +52,7 @@ networks:
   internal:
 
 volumes:
+{%- if cookiecutter.backend == 'sqlalchemy' %}
     postgres:
+{%- endif %}
     redis:
