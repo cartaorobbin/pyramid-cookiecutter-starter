@@ -21,15 +21,15 @@ def main(global_config, **settings):
         config.include('pyramid_retry')
         config.include('pyramid_zodbconn')
     {%- endif %}
+    {%- if cookiecutter.rest_framework == 'cornice' %}
+        config.include('cornice')
+    {%- endif %}
         config.include('.routes')
     {%- if cookiecutter.backend == 'sqlalchemy' %}
         config.include('.models')
     {%- endif %}
     {%- if cookiecutter.backend == 'zodb' %}
         config.set_root_factory(root_factory)
-    {%- endif %}
-    {%- if cookiecutter.rest_framework == 'cornice' %}
-        config.include('cornice')
     {%- endif %}
     {%- if cookiecutter.authentication == 'jwt' %}
         config.include('pyramid_jwt')
