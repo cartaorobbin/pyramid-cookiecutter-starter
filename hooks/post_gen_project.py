@@ -54,11 +54,11 @@ def clean_unused_rest_framework():
     selected_rest_framework = '{{ cookiecutter.rest_framework }}'
 
     if  selected_rest_framework == 'none':
-        prefix = None
+        prefix = 'regular_'
         rm_prefixes = ['cornice_']
     else:
         prefix = 'cornice_'
-        rm_prefixes = []
+        rm_prefixes = ['regular_']
     delete_other_files(WORKING, prefix, rm_prefixes)
 
 
