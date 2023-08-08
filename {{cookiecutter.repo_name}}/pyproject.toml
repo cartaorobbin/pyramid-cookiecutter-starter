@@ -23,7 +23,7 @@ pyramid_retry = "*"
 pyramid_tm = "*"
 SQLAlchemy = "*"
 transaction = "*"
-zope.sqlalchemy = "*"
+zope-sqlalchemy = "*"
 {%- elif cookiecutter.backend == 'zodb' %}
 pyramid_retry = "*"
 pyramid_tm = "*"
