@@ -10,7 +10,7 @@ packages = [{include = "{{cookiecutter.repo_name}}"}]
 python = "^3.11"
 plaster_pastedeploy = "*"
 pyramid = "*"
-pyramid_{{ cookiecutter.template_language }}
+pyramid_{{ cookiecutter.template_language }} = "*"
 pyramid-retry = "*"
 pyramid_debugtoolbar = "*"
 pyramid-auto-env = "*"
