@@ -10,6 +10,7 @@ def main():
     clean_unused_template_settings()
     clean_unused_backend()
     display_actions_message()
+    clean_unused_rest_framework()
 
 
 def clean_unused_template_settings():
@@ -46,6 +47,18 @@ def clean_unused_backend():
         prefix = 'zodb_'
         rm_prefixes = ['sqlalchemy_']
 
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
+
+def clean_unused_rest_framework():
+    selected_rest_framework = '{{ cookiecutter.rest_framework }}'
+
+    if  selected_rest_framework == 'none':
+        prefix = None
+        rm_prefixes = ['cornice_']
+    else:
+        prefix = 'cornice_'
+        rm_prefixes = []
     delete_other_files(WORKING, prefix, rm_prefixes)
 
 
