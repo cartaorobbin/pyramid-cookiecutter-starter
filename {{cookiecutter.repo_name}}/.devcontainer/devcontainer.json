@@ -50,6 +50,11 @@
 	"features": {
 		"docker-in-docker": "latest",
 		"python": "3.11.3",
-		"ghcr.io/devcontainers-contrib/features/poetry:2": {}
+		"ghcr.io/devcontainers-contrib/features/poetry:2": {},
+		{%- if cookiecutter.backend == 'sqlalchemy' %}
+		"ghcr.io/devcontainers-contrib/features/postgres-asdf:1": {
+			"version": "latest"
+		}
+		{%- endif %}
 	}
 }
