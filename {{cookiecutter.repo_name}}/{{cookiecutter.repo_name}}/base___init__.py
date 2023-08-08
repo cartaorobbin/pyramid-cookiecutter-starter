@@ -28,5 +28,11 @@ def main(global_config, **settings):
     {%- if cookiecutter.backend == 'zodb' %}
         config.set_root_factory(root_factory)
     {%- endif %}
+    {%- if cookiecutter.rest_framework == 'cornice' %}
+        config.include('cornice')
+    {%- endif %}
+    {%- if cookiecutter.authentication == 'jwt' %}
+        config.include('pyramid_jwt')
+    {%- endif %}
         config.scan()
     return config.make_wsgi_app()
