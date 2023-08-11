@@ -11,6 +11,8 @@ def main():
     clean_unused_backend()
     display_actions_message()
     clean_unused_rest_framework()
+    clean_unused_pyramid_services()
+    clean_unused_schemas()
 
 
 def clean_unused_template_settings():
@@ -60,6 +62,31 @@ def clean_unused_rest_framework():
         prefix = 'cornice_'
         rm_prefixes = ['regular_']
     delete_other_files(WORKING, prefix, rm_prefixes)
+
+
+def clean_unused_pyramid_services():
+    selected_pyramid_services = '{{ cookiecutter.pyramid_services }}'
+
+    if  selected_pyramid_services == 'none':
+        prefix = 'regular_'
+        rm_prefixes = ['pyramid_services_']
+    else:
+        prefix = 'pyramid_services_'
+        rm_prefixes = ['regular_']
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
+
+def clean_unused_schemas():
+    selected_schemas = '{{ cookiecutter.schemas }}'
+
+    if  selected_schemas == 'none':
+        prefix = 'regular_'
+        rm_prefixes = ['schemas_']
+    else:
+        prefix = 'schemas_'
+        rm_prefixes = ['regular_']
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
 
 
 def delete_other_files(directory, current_prefix, rm_prefixes):

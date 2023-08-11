@@ -26,12 +26,14 @@ base_files = [
     '/tests/test_functional.py',
     '/tests/test_views.py',
     'CHANGES.txt',
+    'Dockerfile',
     'MANIFEST.in',
-    'README.txt',
+    'Makefile',
+    'README.md',
     'development.ini',
     'production.ini',
+    'pyproject.toml',
     'pytest.ini',
-    'setup.py',
     'testing.ini',
 ]
 
@@ -156,7 +158,8 @@ def test_base(cookies, venv, capfd, template):
     if 'OVERRIDE_PYRAMID' in os.environ:  # pragma: no cover
         venv.install(os.environ['OVERRIDE_PYRAMID'], editable=True)
 
-    venv.install(cwd + '[testing]', editable=True)
+    import pdb; pdb.set_trace()
+    venv.install(cwd, editable=True)
     subprocess.check_call([venv.python, '-m', 'pytest', '-q'], cwd=cwd)
 
 
@@ -203,7 +206,7 @@ def test_zodb(cookies, venv, capfd, template):
         venv.install(os.environ['OVERRIDE_PYRAMID'], editable=True)
 
     venv.install(cwd + '[testing]', editable=True)
-    subprocess.check_call([venv.python, '-m', 'pytest', '-q'], cwd=cwd)
+    subprocess.check_call([venv.python, '-m', 'poetry run pytest', '-q'], cwd=cwd)
 
 
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
@@ -264,7 +267,7 @@ def test_sqlalchemy(cookies, venv, capfd, template):
         '''
     )
     subprocess.check_call([venv.python, '-c', create_migration_script], cwd=cwd)
-    subprocess.check_call([venv.python, '-m', 'pytest', '-q'], cwd=cwd)
+    subprocess.check_call([venv.python, '-m', 'poetry run pytest', '-q'], cwd=cwd)
 
 
 def test_it_invalid_module_name(cookies, venv, capfd):
