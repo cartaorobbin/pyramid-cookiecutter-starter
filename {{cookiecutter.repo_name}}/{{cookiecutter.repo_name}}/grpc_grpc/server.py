@@ -1,8 +1,9 @@
 import re
 import click
-from pyramid.paster import bootstrap, setup_logging
-from person.grpc.main import serve, build_interceptors
 import grpc
+from pyramid.paster import bootstrap, setup_logging
+from {{cookiecutter.repo_name}}.grpc.main import serve, build_interceptors
+
 from concurrent import futures
 
 import logging

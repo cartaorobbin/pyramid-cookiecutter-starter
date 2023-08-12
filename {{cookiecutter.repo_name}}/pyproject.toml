@@ -42,6 +42,9 @@ marshmallow = "*"
 pyramid-jwt = "*"
 pyjwt = {extras = ["crypto"], version = "*"}
 {%- endif %}
+{%- if cookiecutter.rpc == 'grpc' %}
+grpc-interceptor = "*"
+{%- endif %}
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"

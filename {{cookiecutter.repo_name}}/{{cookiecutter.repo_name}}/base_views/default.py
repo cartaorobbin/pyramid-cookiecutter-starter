@@ -1,5 +1,10 @@
 from pyramid.view import view_config
 
+@view_config(route_name="health", renderer="json")
+def health(request):
+    return {"status": "true"}
+
+
 {%- if cookiecutter.backend == 'zodb' %}
 
 from ..models import MyModel

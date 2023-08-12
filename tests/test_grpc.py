@@ -8,7 +8,7 @@ from tests.utils import build_files_list, WIN, WORKING
 
 
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
-def test_jwt(cookies, venv, capfd, template):
+def test_grpc(cookies, venv, capfd, template):
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
@@ -55,7 +55,6 @@ def test_jwt(cookies, venv, capfd, template):
 
     # venv.install(cwd, editable=True, upgrade=True)
     subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)

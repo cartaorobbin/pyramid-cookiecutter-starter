@@ -58,7 +58,7 @@ def test_base(cookies, venv, capfd, template):
     subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
 
 
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
@@ -107,7 +107,7 @@ def test_zodb(cookies, venv, capfd, template):
     subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
 
 
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
@@ -155,7 +155,7 @@ def test_sqlalchemy(cookies, venv, capfd, template):
 
     subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
+    subprocess.check_call([venv.bin + '/poetry', 'install'], cwd=cwd)
     
     create_migration_script = textwrap.dedent(
         '''
@@ -223,12 +223,7 @@ def test_pyramid_services(cookies, venv, capfd, template):
     subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
-
-
-
-
-
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
 
 
 def test_it_invalid_module_name(cookies, venv, capfd):
