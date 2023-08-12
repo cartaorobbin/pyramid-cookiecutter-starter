@@ -6,6 +6,7 @@
     "rest_framework": ["none", "cornice"],
     "schemas": ["none", "marshmallow"],
     "authentication": ["none", "jwt"],
+    "rpc": ["none", "grpc"],
     "pyramid_services": ["none", "pyramid-services"],
     "_copy_without_render": [
         "static/*"

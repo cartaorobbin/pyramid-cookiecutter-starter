@@ -14,6 +14,7 @@ def main():
     clean_unused_pyramid_services()
     clean_unused_schemas()
     clean_unused_authentication()
+    clean_unused_rpc()
 
 
 def clean_unused_template_settings():
@@ -73,6 +74,18 @@ def clean_unused_authentication():
         rm_prefixes = ['jwt_']
     else:
         prefix = 'jwt_'
+        rm_prefixes = ['regular_']
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
+
+def clean_unused_rpc():
+    selected_rpc = '{{ cookiecutter.rpc }}'
+
+    if  selected_rpc == 'none':
+        prefix = 'regular_'
+        rm_prefixes = ['grpc_']
+    else:
+        prefix = 'grpc_'
         rm_prefixes = ['regular_']
     delete_other_files(WORKING, prefix, rm_prefixes)
 

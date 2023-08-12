@@ -60,3 +60,13 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.plugins."paste.app_factory"]
 main = "{{cookiecutter.repo_name}}:main"
+
+[tool.poetry.scripts]
+manage = '{{cookiecutter.repo_name}}.scripts.manage:cli'
+{%- if cookiecutter.backend == 'sqlalchemy' %}
+initialize_db = 'person.scripts.initialize_db:main'
+drop_db = 'person.scripts.drop_db:main'
+{%- endif %}
+{%- if cookiecutter.rpc == 'grpc' %}
+grpc-server = 'person.grpc.server:run'
+{%- endif %}
