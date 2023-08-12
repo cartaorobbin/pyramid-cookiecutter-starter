@@ -1,4 +1,6 @@
 from pyramid.config import Configurator
+from pyramid_auto_env import autoenv_settings
+
 {%- if cookiecutter.backend == 'zodb' %}
 from pyramid_zodbconn import get_connection
 
@@ -10,7 +12,12 @@ def root_factory(request):
     return appmaker(conn.root())
 {%- endif %}
 
+{%- if cookiecutter.authentication == 'jwt' %}
+from {{cookiecutter.repo_name}}.a10n import SecurityPolicy
+{%- endif %}
 
+
+@autoenv_settings(prefix="{{cookiecutter.repo_name | upper}}")
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -32,6 +39,7 @@ def main(global_config, **settings):
     {%- endif %}
     {%- if cookiecutter.authentication == 'jwt' %}
         config.include('pyramid_jwt')
+        config.set_security_policy(SecurityPolicy(settings))
     {%- endif %}
     {%- if cookiecutter.pyramid_services == 'pyramid-services' %}
         config.include('pyramid_services')

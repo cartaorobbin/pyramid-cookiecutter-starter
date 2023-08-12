@@ -13,6 +13,7 @@ def main():
     clean_unused_rest_framework()
     clean_unused_pyramid_services()
     clean_unused_schemas()
+    clean_unused_authentication()
 
 
 def clean_unused_template_settings():
@@ -60,6 +61,18 @@ def clean_unused_rest_framework():
         rm_prefixes = ['cornice_']
     else:
         prefix = 'cornice_'
+        rm_prefixes = ['regular_']
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
+
+def clean_unused_authentication():
+    selected_authentication = '{{ cookiecutter.authentication }}'
+
+    if  selected_authentication == 'none':
+        prefix = 'regular_'
+        rm_prefixes = ['jwt_']
+    else:
+        prefix = 'jwt_'
         rm_prefixes = ['regular_']
     delete_other_files(WORKING, prefix, rm_prefixes)
 
