@@ -46,5 +46,5 @@ def main(global_config, **settings):
         config.include('.services')
     {%- endif %}
         config.include('.routes')
-        config.scan()
+        config.scan(ignore='.scripts')
     return config.make_wsgi_app()

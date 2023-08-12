@@ -4,7 +4,6 @@ services:
       # Note that the path of the Dockerfile and context is relative to the *primary*
       # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
       # array). The sample below assumes your primary file is in the root of your project.
-    env_file: .devcontainer/devcontainer.env
     build:
       context: .
       dockerfile: .devcontainer/Dockerfile

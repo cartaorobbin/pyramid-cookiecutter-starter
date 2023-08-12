@@ -17,6 +17,7 @@ pyramid-auto-env = "*"
 waitress = "*"
 gunicorn = "*"
 pyramid-services = "*"
+requests = "*"
 {%- if cookiecutter.backend == 'sqlalchemy' %}
 alembic = "*"
 pyramid_retry = "*"
