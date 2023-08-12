@@ -24,7 +24,6 @@ def main(global_config, **settings):
     {%- if cookiecutter.rest_framework == 'cornice' %}
         config.include('cornice')
     {%- endif %}
-        config.include('.routes')
     {%- if cookiecutter.backend == 'sqlalchemy' %}
         config.include('.models')
     {%- endif %}
@@ -34,5 +33,10 @@ def main(global_config, **settings):
     {%- if cookiecutter.authentication == 'jwt' %}
         config.include('pyramid_jwt')
     {%- endif %}
+    {%- if cookiecutter.pyramid_services == 'pyramid-services' %}
+        config.include('pyramid_services')
+        config.include('.services')
+    {%- endif %}
+        config.include('.routes')
         config.scan()
     return config.make_wsgi_app()

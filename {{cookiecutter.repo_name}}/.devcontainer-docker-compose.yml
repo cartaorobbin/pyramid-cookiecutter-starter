@@ -1,0 +1,63 @@
+version: '3'
+services:
+  dev-service:
+      # Note that the path of the Dockerfile and context is relative to the *primary*
+      # docker-compose.yml file (the first in the devcontainer.json "dockerComposeFile"
+      # array). The sample below assumes your primary file is in the root of your project.
+    env_file: .devcontainer/devcontainer.env
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+      args:
+        VARIANT: "ubuntu-22.04"
+    links:
+      - redis:rs
+      - postgres:postgresdb
+    volumes:
+      - .:/workspace:cached
+      - bashhistory:/commandhistory
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    networks:
+      - internal
+
+  {%- if cookiecutter.backend == 'sqlalchemy' %}
+
+  postgres:
+    # container_name: postgres_container
+    image: postgres:15.3
+    environment:
+      POSTGRES_USER: person
+      POSTGRES_PASSWORD: person
+      POSTGRES_DB: person
+      PGDATA: /data/postgres
+    volumes:
+       - person-postgres:/data/postgres
+    # ports:
+    #   - "5432:5432"
+    networks:
+      - internal
+
+    restart: unless-stopped
+
+  {%- endif %}
+
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    # ports:
+    #   - '6379:6379'
+    networks:
+      - internal
+    command: redis-server --loglevel warning
+    volumes: 
+      - redis:/data
+
+networks:
+  internal:
+
+volumes:
+    person-postgres:
+    redis:
+    bashhistory:

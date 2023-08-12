@@ -7,103 +7,7 @@ import textwrap
 WIN = sys.platform == 'win32'
 WORKING = os.path.abspath(os.path.join(os.path.curdir))
 
-base_files = [
-    '.coveragerc',
-    '.gitignore',
-    '/myapp/__init__.py',
-    '/myapp/routes.py',
-    '/myapp/static/pyramid-16x16.png',
-    '/myapp/static/pyramid.png',
-    '/myapp/static/theme.css',
-    '/myapp/templates/404.template_extension',
-    '/myapp/templates/layout.template_extension',
-    '/myapp/templates/mytemplate.template_extension',
-    '/myapp/views/__init__.py',
-    '/myapp/views/default.py',
-    '/myapp/views/notfound.py',
-    '/tests/__init__.py',
-    '/tests/conftest.py',
-    '/tests/test_functional.py',
-    '/tests/test_views.py',
-    'CHANGES.txt',
-    'Dockerfile',
-    'MANIFEST.in',
-    'Makefile',
-    'README.md',
-    'development.ini',
-    'production.ini',
-    'pyproject.toml',
-    'pytest.ini',
-    'testing.ini',
-]
-
-sqlalchemy_files = [
-    '.coveragerc',
-    '.gitignore',
-    '/myapp/__init__.py',
-    '/myapp/alembic/env.py',
-    '/myapp/alembic/script.py.mako',
-    '/myapp/alembic/versions/README.txt',
-    '/myapp/models/__init__.py',
-    '/myapp/models/meta.py',
-    '/myapp/models/mymodel.py',
-    '/myapp/pshell.py',
-    '/myapp/routes.py',
-    '/myapp/scripts/__init__.py',
-    '/myapp/scripts/initialize_db.py',
-    '/myapp/static/pyramid-16x16.png',
-    '/myapp/static/pyramid.png',
-    '/myapp/static/theme.css',
-    '/myapp/templates/404.template_extension',
-    '/myapp/templates/layout.template_extension',
-    '/myapp/templates/mytemplate.template_extension',
-    '/myapp/views/__init__.py',
-    '/myapp/views/default.py',
-    '/myapp/views/notfound.py',
-    '/tests/__init__.py',
-    '/tests/conftest.py',
-    '/tests/test_functional.py',
-    '/tests/test_views.py',
-    'CHANGES.txt',
-    'MANIFEST.in',
-    'README.txt',
-    'development.ini',
-    'production.ini',
-    'pytest.ini',
-    'setup.py',
-    'testing.ini',
-]
-
-zodb_files = [
-    '.coveragerc',
-    '.gitignore',
-    '/myapp/__init__.py',
-    '/myapp/models/__init__.py',
-    '/myapp/pshell.py',
-    '/myapp/routes.py',
-    '/myapp/static/pyramid-16x16.png',
-    '/myapp/static/pyramid.png',
-    '/myapp/static/theme.css',
-    '/myapp/templates/404.template_extension',
-    '/myapp/templates/layout.template_extension',
-    '/myapp/templates/mytemplate.template_extension',
-    '/myapp/views/__init__.py',
-    '/myapp/views/default.py',
-    '/myapp/views/notfound.py',
-    '/tests/__init__.py',
-    '/tests/conftest.py',
-    '/tests/test_functional.py',
-    '/tests/test_views.py',
-    'CHANGES.txt',
-    'MANIFEST.in',
-    'README.txt',
-    'development.ini',
-    'production.ini',
-    'pytest.ini',
-    'setup.py',
-    'testing.ini',
-]
-
+from tests.expected_files import base_files, sqlalchemy_files, zodb_files, pyramid_services_files
 
 def build_files_list(root_dir):
     """Build a list containing relative paths to the generated files."""
@@ -158,9 +62,12 @@ def test_base(cookies, venv, capfd, template):
     if 'OVERRIDE_PYRAMID' in os.environ:  # pragma: no cover
         venv.install(os.environ['OVERRIDE_PYRAMID'], editable=True)
 
-    import pdb; pdb.set_trace()
-    venv.install(cwd, editable=True)
-    subprocess.check_call([venv.python, '-m', 'pytest', '-q'], cwd=cwd)
+    # venv.install(cwd, editable=True, upgrade=True)
+    subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
 
 
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
@@ -205,8 +112,11 @@ def test_zodb(cookies, venv, capfd, template):
     if 'OVERRIDE_PYRAMID' in os.environ:  # pragma: no cover
         venv.install(os.environ['OVERRIDE_PYRAMID'], editable=True)
 
-    venv.install(cwd + '[testing]', editable=True)
-    subprocess.check_call([venv.python, '-m', 'poetry run pytest', '-q'], cwd=cwd)
+    subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
 
 
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
@@ -252,7 +162,10 @@ def test_sqlalchemy(cookies, venv, capfd, template):
     if 'OVERRIDE_PYRAMID' in os.environ:  # pragma: no cover
         venv.install(os.environ['OVERRIDE_PYRAMID'], editable=True)
 
-    venv.install(cwd + '[testing]', editable=True)
+    subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
+    
     create_migration_script = textwrap.dedent(
         '''
         import alembic.config
@@ -266,8 +179,60 @@ def test_sqlalchemy(cookies, venv, capfd, template):
         )
         '''
     )
-    subprocess.check_call([venv.python, '-c', create_migration_script], cwd=cwd)
-    subprocess.check_call([venv.python, '-m', 'poetry run pytest', '-q'], cwd=cwd)
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'python', '-c', create_migration_script], cwd=cwd)
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
+
+
+@pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
+def test_pyramid_services(cookies, venv, capfd, template):
+    result = cookies.bake(extra_context={
+        'project_name': 'Test Project',
+        'template_language': template,
+        'backend': 'none',
+        'pyramid_services': 'pyramid-services',
+        'repo_name': 'myapp',
+    })
+
+    assert result.exit_code == 0
+
+    out, err = capfd.readouterr()
+
+    if WIN:
+        assert 'Scripts\\pserve' in out
+        for idx, base_file in enumerate(pyramid_services_files):
+            pyramid_services_files[idx] = base_file.replace('/', '\\')
+        pyramid_services_files.sort()
+
+    else:
+        assert 'bin/pserve' in out
+
+    # Get the file list generated by cookiecutter. Differs based on backend.
+    files = build_files_list(str(result.project_path))
+    files.sort()
+
+    # Rename files based on template being used
+    if template == 'chameleon':
+        template = 'pt'
+
+    for idx, base_file in enumerate(pyramid_services_files):
+        if 'templates' in base_file:
+            pyramid_services_files[idx] = pyramid_services_files[idx].split('.')[0] + '.' + template
+
+    assert pyramid_services_files == files
+
+    cwd = str(result.project_path)
+
+    # this is a hook for executing scaffold tests against a specific
+    # version of pyramid (or a local checkout on disk)
+    if 'OVERRIDE_PYRAMID' in os.environ:  # pragma: no cover
+        venv.install(os.environ['OVERRIDE_PYRAMID'], editable=True)
+
+    # venv.install(cwd, editable=True, upgrade=True)
+    subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
+    subprocess.call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
 
 
 def test_it_invalid_module_name(cookies, venv, capfd):
