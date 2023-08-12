@@ -5,42 +5,74 @@ Getting Started
 ---------------
 
 - Change directory into your newly created project if not already there. Your
-  current directory should be the same as this README.txt file and setup.py.
+  current directory should be the same as this README.md file.
 
+```bash
     cd {{ cookiecutter.repo_name }}
+```
+
+- If you are using Visual Studio Code just reopen the window
+
+Otherwise
 
 - Create a Python virtual environment, if not already created.
 
+```bash
     python3 -m venv env
+```
 
 - Upgrade packaging tools, if necessary.
 
+```bash
     env/bin/pip install --upgrade pip setuptools
+    env/bin/pip install --upgrade poetry
+```
 
 - Install the project in editable mode with its testing requirements.
 
-    env/bin/pip install -e ".[testing]"
+```bash
+    env/bin/poetry install
+    env/bin/poetry shell
+```
 
 {% if cookiecutter.backend == 'sqlalchemy' -%}
 - Initialize and upgrade the database using Alembic.
 
     - Generate your first revision.
-
-        env/bin/alembic -c development.ini revision --autogenerate -m "init"
-
+```bash
+        alembic -c development.ini revision --autogenerate -m "init"
+```
     - Upgrade to that revision.
-
-        env/bin/alembic -c development.ini upgrade head
+```bash
+        alembic -c development.ini upgrade head
+```
 
 - Load default data into the database using a script.
-
-    env/bin/initialize_{{ cookiecutter.repo_name }}_db development.ini
-
+```bash
+    initialize_{{ cookiecutter.repo_name }}_db development.ini
+```
 {% endif -%}
 - Run your project's tests.
-
-    env/bin/pytest
-
+```bash
+   pytest
+```
 - Run your project.
 
-    env/bin/pserve development.ini
+```bash
+   pserve development.ini
+```
+
+- Access project the shell.
+
+```bash
+   pshell development.ini
+```
+
+{% if cookiecutter.rpc == 'grpc' -%}
+
+- Run your grpc server.
+
+```bash
+   grpc-server development.ini
+```
+{% endif -%}
