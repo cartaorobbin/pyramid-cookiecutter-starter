@@ -15,7 +15,8 @@ def main():
     clean_unused_schemas()
     clean_unused_authentication()
     clean_unused_rpc()
-
+    clean_unused_task()
+    clean_unused_orchestrator()
 
 def clean_unused_template_settings():
     selected_lang = '{{ cookiecutter.template_language }}'
@@ -64,6 +65,30 @@ def clean_unused_rest_framework():
         prefix = 'cornice_'
         rm_prefixes = ['regular_']
     delete_other_files(WORKING, prefix, rm_prefixes)
+
+
+def clean_unused_task():
+    selected = '{{ cookiecutter.tasks }}'
+
+    if  selected == 'none':
+        prefix = 'regular_'
+        rm_prefixes = ['celery_']
+    else:
+        prefix = 'celery_'
+        rm_prefixes = ['regular_']
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
+def clean_unused_orchestrator():
+    selected = '{{ cookiecutter.orchestrator }}'
+
+    if  selected == 'none':
+        prefix = 'regular_'
+        rm_prefixes = ['orchestrator_']
+    else:
+        prefix = 'orchestrator_'
+        rm_prefixes = ['regular_']
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
 
 
 def clean_unused_authentication():

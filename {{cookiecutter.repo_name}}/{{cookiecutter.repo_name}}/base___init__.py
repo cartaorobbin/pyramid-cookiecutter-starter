@@ -41,10 +41,18 @@ def main(global_config, **settings):
         config.include('pyramid_jwt')
         config.set_security_policy(SecurityPolicy(settings))
     {%- endif %}
+    {%- if cookiecutter.tasks == 'celery' %}
+        config.include('pyramid_celery')
+        config.include('.tasks')
+    {%- endif %}
+
     {%- if cookiecutter.pyramid_services == 'pyramid-services' %}
         config.include('pyramid_services')
         config.include('.services')
     {%- endif %}
         config.include('.routes')
         config.scan(ignore='.scripts')
+    {%- if cookiecutter.rpc == 'grpc' %}
+        config.include('.grpcs')
+    {%- endif %}
     return config.make_wsgi_app()

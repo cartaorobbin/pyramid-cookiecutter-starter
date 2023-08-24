@@ -3,17 +3,17 @@ import os
 import subprocess
 import textwrap
 
-from tests.expected_files import jwt_files
+from tests.expected_files import celery_files
 from tests.utils import build_files_list, WIN, WORKING
 
+
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
-def test_jwt(cookies, venv, capfd, template):
+def test_base(cookies, venv, capfd, template):
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
         'backend': 'none',
-        'pyramid_services': 'pyramid-services',
-        'authentication': 'jwt',
+        'tasks': 'celery',
         'repo_name': 'myapp',
     })
 
@@ -23,9 +23,9 @@ def test_jwt(cookies, venv, capfd, template):
 
     if WIN:
         assert 'Scripts\\pserve' in out
-        for idx, base_file in enumerate(jwt_files):
-            jwt_files[idx] = base_file.replace('/', '\\')
-        jwt_files.sort()
+        for idx, base_file in enumerate(celery_files):
+            celery_files[idx] = celery_files.replace('/', '\\')
+        celery_files.sort()
 
     else:
         assert 'bin/pserve' in out
@@ -38,9 +38,8 @@ def test_jwt(cookies, venv, capfd, template):
     if template == 'chameleon':
         template = 'pt'
 
-    for idx, base_file in enumerate(jwt_files):
+    for idx, base_file in enumerate(celery_files):
         if 'templates' in base_file:
-            jwt_files[idx] = jwt_files[idx].split('.')[0] + '.' + template
+            celery_files[idx] = celery_files[idx].split('.')[0] + '.' + template
 
-    assert jwt_files == files
-
+    assert celery_files == files

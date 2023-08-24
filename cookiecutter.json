@@ -7,6 +7,8 @@
     "schemas": ["none", "marshmallow"],
     "authentication": ["none", "jwt"],
     "rpc": ["none", "grpc"],
+    "tasks": ["none", "celery"],
+    "orchestrator": ["none", "conductor"],
     "pyramid_services": ["none", "pyramid-services"],
     "_copy_without_render": [
         "static/*"

@@ -46,16 +46,3 @@ def test_grpc(cookies, venv, capfd, template):
             cornice_files[idx] = cornice_files[idx].split('.')[0] + '.' + template
 
     assert cornice_files == files
-
-    cwd = str(result.project_path)
-
-    # this is a hook for executing scaffold tests against a specific
-    # version of pyramid (or a local checkout on disk)
-    if 'OVERRIDE_PYRAMID' in os.environ:  # pragma: no cover
-        venv.install(os.environ['OVERRIDE_PYRAMID'], editable=True)
-
-    # venv.install(cwd, editable=True, upgrade=True)
-    subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
-    subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)

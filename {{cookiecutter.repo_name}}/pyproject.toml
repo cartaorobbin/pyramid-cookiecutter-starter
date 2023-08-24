@@ -18,6 +18,7 @@ waitress = "*"
 gunicorn = "*"
 pyramid-services = "*"
 requests = "*"
+camel-converter = "*"
 {%- if cookiecutter.backend == 'sqlalchemy' %}
 alembic = "*"
 pyramid_retry = "*"
@@ -45,7 +46,12 @@ pyjwt = {extras = ["crypto"], version = "*"}
 {%- endif %}
 {%- if cookiecutter.rpc == 'grpc' %}
 grpc-interceptor = "*"
+pyramid-grpc = "*"
 {%- endif %}
+{%- if cookiecutter.tasks == 'celery' %}
+pyramid_celery = "*"
+{%- endif %}
+
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
@@ -68,9 +74,9 @@ main = "{{cookiecutter.repo_name}}:main"
 [tool.poetry.scripts]
 manage = '{{cookiecutter.repo_name}}.scripts.manage:cli'
 {%- if cookiecutter.backend == 'sqlalchemy' %}
-initialize_db = 'person.scripts.initialize_db:main'
-drop_db = 'person.scripts.drop_db:main'
+initialize_db = '{{cookiecutter.repo_name}}.scripts.initialize_db:main'
+drop_db = '{{cookiecutter.repo_name}}.scripts.drop_db:main'
 {%- endif %}
 {%- if cookiecutter.rpc == 'grpc' %}
-grpc-server = 'person.grpc.server:run'
+grpc-server = 'pyramid_grpc.server:run'
 {%- endif %}

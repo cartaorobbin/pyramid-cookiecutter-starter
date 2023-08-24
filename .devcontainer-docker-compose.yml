@@ -14,7 +14,7 @@ services:
       - redis:rs
       - postgres:postgresdb
     volumes:
-      - .:/workspace:cached
+      - .:/workspace
       - bashhistory:/commandhistory
     command: /bin/sh -c "while sleep 1000; do :; done"
     networks:
@@ -24,12 +24,12 @@ services:
     # container_name: postgres_container
     image: postgres:15.3
     environment:
-      POSTGRES_USER: person
-      POSTGRES_PASSWORD: person
-      POSTGRES_DB: person
+      POSTGRES_USER: pcc
+      POSTGRES_PASSWORD: pcc_password
+      POSTGRES_DB: pcc
       PGDATA: /data/postgres
     volumes:
-       - person-postgres:/data/postgres
+       - pcc-postgres:/data/postgres
     # ports:
     #   - "5432:5432"
     networks:
@@ -53,6 +53,6 @@ networks:
   internal:
 
 volumes:
-    person-postgres:
+    pcc-postgres:
     redis:
     bashhistory:

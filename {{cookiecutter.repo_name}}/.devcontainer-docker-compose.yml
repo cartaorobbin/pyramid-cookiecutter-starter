@@ -25,12 +25,12 @@ services:
     # container_name: postgres_container
     image: postgres:15.3
     environment:
-      POSTGRES_USER: person
-      POSTGRES_PASSWORD: person
-      POSTGRES_DB: person
+      POSTGRES_USER: {{cookiecutter.repo_name}}
+      POSTGRES_PASSWORD: {{cookiecutter.repo_name}}
+      POSTGRES_DB: {{cookiecutter.repo_name}}
       PGDATA: /data/postgres
     volumes:
-       - person-postgres:/data/postgres
+       - postgres:/data/postgres
     # ports:
     #   - "5432:5432"
     networks:
@@ -57,6 +57,6 @@ networks:
   internal:
 
 volumes:
-    person-postgres:
+    postgres:
     redis:
     bashhistory:
