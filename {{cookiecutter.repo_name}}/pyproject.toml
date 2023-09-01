@@ -47,6 +47,8 @@ pyjwt = {extras = ["crypto"], version = "*"}
 {%- if cookiecutter.rpc == 'grpc' %}
 grpc-interceptor = "*"
 pyramid-grpc = "*"
+grpcio = "*"
+grpcio-tools = "*"
 {%- endif %}
 {%- if cookiecutter.tasks == 'celery' %}
 pyramid_celery = "*"
@@ -58,10 +60,15 @@ pytest = "*"
 pytest-cov = "*"
 black = "*"
 webtest = "*"
+pytest-mock = "*"
 {%- if cookiecutter.backend == 'sqlalchemy' %}
 testing-postgresql = "*"
 factory-boy = "*"
 pytest-factoryboy = "*"
+{%- endif %}
+{%- if cookiecutter.rpc == 'grpc' %}
+pytest-grpc = "*"
+python-jose = "*"
 {%- endif %}
 
 [build-system]

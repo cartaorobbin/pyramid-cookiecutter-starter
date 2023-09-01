@@ -14,6 +14,22 @@ from {{ cookiecutter.repo_name }} import models
 from {{ cookiecutter.repo_name }}.models.meta import Base
 
 
+pytest_plugins = [
+    {%- if cookiecutter.rpc == 'grpc' %}
+    "tests.plugins.grpc",
+    {%- endif %}
+    {%- if cookiecutter.orchestrator == 'conductor' %}
+    "tests.plugins.conductor",
+    {%- endif %}
+    {%- if cookiecutter.tasks == 'celery' %}
+    "tests.plugins.celery",
+    {%- endif %}
+    {%- if cookiecutter.authentication == 'jwt' %}
+    "tests.plugins.jwt",
+    {%- endif %}
+]
+
+
 def pytest_addoption(parser):
     parser.addoption('--ini', action='store', metavar='INI_FILE')
 
@@ -130,3 +146,54 @@ def dummy_config(dummy_request):
     """
     with testConfig(request=dummy_request) as config:
         yield config
+
+
+{%- if cookiecutter.rpc == 'grpc' %}
+
+
+@pytest.fixture
+def auth_grpc_metada(auth_token):
+    def inner(scope: list = None, headers: dict = None):
+        headers = headers or {}
+        scope = {"scope": scope or []}
+        metadata = {"authorization": auth_token(scope)}
+
+        metadata.update(headers)
+
+        return metadata
+
+    return inner
+
+
+@pytest.fixture
+def grpc_testapp(
+    app,
+    pyramid_grpc_server,
+    pyramid_grpc_channel,
+    transaction_interseptor_extra_environ_mock,
+    tm,
+    dbsession,
+    test_app_factory,
+):
+    # override request.dbsession and request.tm with our own
+    # externally-controlled values that are shared across requests but aborted
+    # at the end
+
+    extra_environ = {
+        "http_host": "example.com",
+        "tm.active": "True",
+        "tm.manager": tm,
+        "app.dbsession": dbsession,
+    }
+
+    testapp = test_app_factory(
+        app,
+        server=pyramid_grpc_server,
+        channel=pyramid_grpc_channel,
+    )
+
+    transaction_interseptor_extra_environ_mock(extra_environ)
+
+    return testapp
+
+{%- endif %}

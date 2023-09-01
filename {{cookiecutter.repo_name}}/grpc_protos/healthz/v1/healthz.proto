@@ -1,0 +1,16 @@
+syntax="proto3";
+
+option go_package = "healthz/v1/go-healthz";
+
+package healthz.v1;
+
+service HealthzService {
+    rpc Healthz(Empty) returns (HealthzResponse) {}
+}
+
+message Empty {}
+
+// 1 is expexted as return.
+message HealthzResponse {
+    int32 status = 1;
+}

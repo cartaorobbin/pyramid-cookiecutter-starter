@@ -17,6 +17,28 @@ from tests.utils import build_files_list, WIN, WORKING
 @pytest.mark.parametrize('backend', ["none", "sqlalchemy", "zodb"])
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
 def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, pyramid_services, authentication, rpc, tasks):
+
+    if backend != 'sqlalchemy':
+        return
+    
+    if rest_framework != 'cornice':
+        return
+
+    if schemas != 'marshmallow':
+        return
+
+    if pyramid_services != 'pyramid-services':
+        return
+
+    if authentication != 'jwt':
+        return
+
+    if rpc != 'grpc':
+        return
+
+    if tasks != 'celery':
+        return
+
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,

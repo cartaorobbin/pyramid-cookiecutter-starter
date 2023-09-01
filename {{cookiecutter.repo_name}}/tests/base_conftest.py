@@ -8,6 +8,22 @@ import webtest
 from {{ cookiecutter.repo_name }} import main
 
 
+pytest_plugins = [
+    {%- if cookiecutter.rpc == 'grpc' %}
+    "tests.plugins.grpc",
+    {%- endif %}
+    {%- if cookiecutter.orchestrator == 'conductor' %}
+    "tests.plugins.conductor",
+    {%- endif %}
+    {%- if cookiecutter.tasks == 'celery' %}
+    "tests.plugins.celery",
+    {%- endif %}
+    {%- if cookiecutter.authentication == 'jwt' %}
+    "tests.plugins.jwt",
+    {%- endif %}
+]
+
+
 def pytest_addoption(parser):
     parser.addoption('--ini', action='store', metavar='INI_FILE')
 

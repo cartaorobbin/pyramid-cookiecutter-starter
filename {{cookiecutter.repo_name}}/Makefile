@@ -20,3 +20,9 @@ docker-build:
 docker-run:
 	docker run -it --rm {{cookiecutter.repo_name}}:latest
 
+
+{%- if cookiecutter.rpc == 'grpc' %}
+protos:
+	python -m grpc_tools.protoc -I protos --python_out=. --grpc_python_out=. protos/{{cookiecutter.repo_name}}/grpcs/healthz/v1/healthz.proto
+	python -m grpc_tools.protoc -I protos --python_out=. --grpc_python_out=. protos/{{cookiecutter.repo_name}}/grpcs/greet/v1/greet.proto
+{%- endif %}
