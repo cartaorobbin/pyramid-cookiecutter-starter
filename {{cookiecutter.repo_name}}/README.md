@@ -35,7 +35,7 @@ Otherwise
     env/bin/poetry shell
 ```
 
-{% if cookiecutter.backend == 'sqlalchemy' -%}
+{% if cookiecutter.persistence == 'sqlalchemy' -%}
 - Initialize and upgrade the database using Alembic.
 
     - Generate your first revision.
@@ -73,6 +73,6 @@ Otherwise
 - Run your grpc server.
 
 ```bash
-   grpc-server development.ini
+   gserve development.ini
 ```
 {% endif -%}

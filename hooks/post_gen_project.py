@@ -8,7 +8,7 @@ WORKING = os.path.abspath(os.path.curdir)
 
 def main():
     clean_unused_template_settings()
-    clean_unused_backend()
+    clean_unused_persistence()
     display_actions_message()
     clean_unused_rest_framework()
     clean_unused_pyramid_services()
@@ -40,24 +40,28 @@ def delete_other_ext(directory, extension):
             os.unlink(os.path.join(directory, template_file))
 
 
-def clean_unused_backend():
-    selected_backend = '{{ cookiecutter.backend }}'
+def clean_unused_persistence():
+    selected = '{{ cookiecutter.persistence }}'
 
-    if selected_backend == 'none':
+    if selected == 'none':
         prefix = None
-        rm_prefixes = ['sqlalchemy_', 'zodb_']
-    elif selected_backend == 'sqlalchemy':
+        rm_prefixes = ['sqlalchemy_postgres_', 'sqlalchemy_', 'zodb_', 'sqlalchemy_sqlite_']
+    elif selected == 'sqlalchemy-sqlite':
         prefix = 'sqlalchemy_'
-        rm_prefixes = ['zodb_']
-    elif selected_backend == 'zodb':
+        rm_prefixes = ['zodb_', 'sqlalchemy_postgres_']
+    elif selected == 'sqlalchemy-postgres':
+        prefix = 'sqlalchemy_'
+        rm_prefixes = ['zodb_', 'sqlalchemy_sqlite_']
+
+    elif selected == 'zodb':
         prefix = 'zodb_'
-        rm_prefixes = ['sqlalchemy_']
+        rm_prefixes = ['sqlalchemy_', 'sqlalchemy_sqlite_', 'sqlalchemy_postgres_']
 
     delete_other_files(WORKING, prefix, rm_prefixes)
 
 
 def clean_unused_rest_framework():
-    selected_rest_framework = '{{ cookiecutter.rest_framework }}'
+    selected_rest_framework = '{{ cookiecutter.rest }}'
 
     if  selected_rest_framework == 'none':
         prefix = 'regular_'
@@ -129,7 +133,7 @@ def clean_unused_rpc():
 
 
 def clean_unused_pyramid_services():
-    selected_pyramid_services = '{{ cookiecutter.pyramid_services }}'
+    selected_pyramid_services = '{{ cookiecutter.services }}'
 
     if  selected_pyramid_services == 'none':
         prefix = 'regular_'
@@ -155,10 +159,10 @@ def clean_unused_schemas():
 
 def delete_other_files(directory, current_prefix, rm_prefixes):
     """
-    Each backend has associated files in the cookiecutter, prefixed by its
+    Each persistence has associated files in the cookiecutter, prefixed by its
     name. Additionally, there is a base_ prefix that gets included no matter
     the selection. Here, we rename or remove these prefixes based on the
-    selected backend.
+    selected persistence.
     """
     for filename in os.listdir(directory):
         full_path = os.path.join(directory, filename)
@@ -210,10 +214,10 @@ def display_actions_message():
         pip_cmd=os.path.join(venv_bin, 'pip'),
         pytest_cmd=os.path.join(venv_bin, 'pytest'),
         pserve_cmd=os.path.join(venv_bin, 'pserve'),
-        {%- if cookiecutter.backend == 'sqlalchemy' %}
+        {%- if cookiecutter.persistence == 'sqlalchemy' %}
         alembic_cmd=os.path.join(venv_bin, 'alembic'),
         init_cmd=os.path.join(
-            venv_bin, 'initialize_{{ cookiecutter.repo_name }}_db'),
+            venv_bin, 'initialize_db'),
         {% endif %}
     )
     msg = dedent(
@@ -238,7 +242,7 @@ def display_actions_message():
         Install the project in editable mode with its testing requirements.
             %(pip_cmd)s install -e ".[testing]"
 
-        {% if cookiecutter.backend == 'sqlalchemy' -%}
+        {% if cookiecutter.persistence == 'sqlalchemy' -%}
         Initialize and upgrade the database using Alembic.
             # Generate your first revision.
             %(alembic_cmd)s -c development.ini revision --autogenerate -m "init"

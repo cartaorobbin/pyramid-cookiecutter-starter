@@ -12,7 +12,8 @@ def test_base(cookies, venv, capfd, template):
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
-        'backend': 'none',
+        'persistence': 'none',
+        'tasks': 'none',
         'repo_name': 'myapp',
     })
 

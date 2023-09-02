@@ -12,7 +12,7 @@ def test_zodb(cookies, venv, capfd, template):
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
-        'backend': 'zodb',
+        'persistence': 'zodb',
         'repo_name': 'myapp',
     })
 

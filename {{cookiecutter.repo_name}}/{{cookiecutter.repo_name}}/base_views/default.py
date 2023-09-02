@@ -5,7 +5,7 @@ def health(request):
     return {"status": "true"}
 
 
-{%- if cookiecutter.backend == 'zodb' %}
+{%- if cookiecutter.persistence == 'zodb' %}
 
 from ..models import MyModel
 
@@ -15,7 +15,7 @@ def my_view(request):
     return {'project': '{{ cookiecutter.project_name }}'}
 
 
-{%- elif cookiecutter.backend == 'sqlalchemy' %}
+{%- elif cookiecutter.persistence.startswith('sqlalchemy') %}
 from pyramid.response import Response
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -48,7 +48,7 @@ try it again.
 """
 
 
-{%- elif cookiecutter.backend == 'none' %}
+{%- elif cookiecutter.persistence == 'none' %}
 
 
 @view_config(route_name='home', renderer='{{ cookiecutter.repo_name }}:templates/mytemplate.{{ "pt" if "chameleon" == cookiecutter.template_language else cookiecutter.template_language }}')

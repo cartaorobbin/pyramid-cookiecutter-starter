@@ -40,6 +40,7 @@ def app_settings(ini_file):
 def app(app_settings):
     return main({}, **app_settings)
 
+
 @pytest.fixture
 def testapp(app):
     testapp = webtest.TestApp(app, extra_environ={
@@ -90,3 +91,47 @@ def dummy_config(dummy_request):
     """
     with testConfig(request=dummy_request) as config:
         yield config
+
+
+{%- if cookiecutter.rpc == 'grpc' %}
+
+
+@pytest.fixture
+def auth_grpc_metada(auth_token):
+    def inner(scope: list = None, headers: dict = None):
+        headers = headers or {}
+        scope = {"scope": scope or []}
+        metadata = {"authorization": auth_token(scope)}
+
+        metadata.update(headers)
+
+        return metadata
+
+    return inner
+
+
+@pytest.fixture
+def grpc_testapp(
+    app,
+    pyramid_grpc_server,
+    pyramid_grpc_channel,
+    test_app_factory,
+):
+    # override request.dbsession and request.tm with our own
+    # externally-controlled values that are shared across requests but aborted
+    # at the end
+
+    extra_environ = {
+        "http_host": "example.com",
+        "tm.active": "True",
+    }
+
+    testapp = test_app_factory(
+        app,
+        server=pyramid_grpc_server,
+        channel=pyramid_grpc_channel,
+    )
+
+    return testapp
+
+{%- endif %}

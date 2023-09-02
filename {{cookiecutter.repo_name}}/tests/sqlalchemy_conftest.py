@@ -1,12 +1,8 @@
-import alembic
-import alembic.config
-import alembic.command
 import os
 from pyramid.paster import get_appsettings
 from pyramid.scripting import prepare
 from pyramid.testing import DummyRequest, testConfig
 import pytest
-import transaction
 import webtest
 
 from {{ cookiecutter.repo_name }} import main
@@ -27,59 +23,29 @@ pytest_plugins = [
     {%- if cookiecutter.authentication == 'jwt' %}
     "tests.plugins.jwt",
     {%- endif %}
+    "tests.plugins.sa",
 ]
 
 
 def pytest_addoption(parser):
     parser.addoption('--ini', action='store', metavar='INI_FILE')
 
+
 @pytest.fixture(scope='session')
 def ini_file(request):
     # potentially grab this path from a pytest option
     return os.path.abspath(request.config.option.ini or 'testing.ini')
 
+
 @pytest.fixture(scope='session')
 def app_settings(ini_file):
     return get_appsettings(ini_file)
 
-@pytest.fixture(scope='session')
-def dbengine(app_settings, ini_file):
-    engine = models.get_engine(app_settings)
-
-    alembic_cfg = alembic.config.Config(ini_file)
-    Base.metadata.drop_all(bind=engine)
-    alembic.command.stamp(alembic_cfg, None, purge=True)
-
-    # run migrations to initialize the database
-    # depending on how we want to initialize the database from scratch
-    # we could alternatively call:
-    Base.metadata.create_all(bind=engine)
-    alembic.command.stamp(alembic_cfg, "head")
-    #alembic.command.upgrade(alembic_cfg, "head")
-
-    yield engine
-
-    Base.metadata.drop_all(bind=engine)
-    alembic.command.stamp(alembic_cfg, None, purge=True)
 
 @pytest.fixture(scope='session')
 def app(app_settings, dbengine):
     return main({}, dbengine=dbengine, **app_settings)
 
-@pytest.fixture
-def tm():
-    tm = transaction.TransactionManager(explicit=True)
-    tm.begin()
-    tm.doom()
-
-    yield tm
-
-    tm.abort()
-
-@pytest.fixture
-def dbsession(app, tm):
-    session_factory = app.registry['dbsession_factory']
-    return models.get_tm_session(session_factory, tm)
 
 @pytest.fixture
 def testapp(app, tm, dbsession):

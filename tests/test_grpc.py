@@ -12,7 +12,7 @@ def test_grpc(cookies, venv, capfd, template):
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
-        'backend': 'none',
+        'persistence': 'none',
         'pyramid_services': 'pyramid-services',
         'authentication': 'jwt',
         'rpc': 'grpc',
@@ -44,5 +44,6 @@ def test_grpc(cookies, venv, capfd, template):
         if 'templates' in base_file:
             grpc_files[idx] = grpc_files[idx].split('.')[0] + '.' + template
 
+    
     assert grpc_files == files
 

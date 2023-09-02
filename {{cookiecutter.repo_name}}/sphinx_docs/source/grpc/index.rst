@@ -1,5 +1,5 @@
 GRPC
 ====
 
-.. automodule:: credit_engine.grpcs
+.. automodule:: {{cookiecutter.repo_name}}.grpcs
    :members:

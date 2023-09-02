@@ -19,7 +19,7 @@ services:
     networks:
       - internal
 
-  {%- if cookiecutter.backend == 'sqlalchemy' %}
+  {%- if cookiecutter.persistence == 'sqlalchemy-postgres' %}
 
   postgres:
     # container_name: postgres_container

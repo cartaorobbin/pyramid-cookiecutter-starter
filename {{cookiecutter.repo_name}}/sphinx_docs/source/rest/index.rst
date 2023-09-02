@@ -1,5 +1,5 @@
 Rest
 ====
 
-.. automodule:: credit_engine.views
+.. automodule:: {{cookiecutter.repo_name}}.views
    :members:

@@ -44,5 +44,5 @@ def test_grpc(cookies, venv, capfd, template):
     for idx, base_file in enumerate(cornice_files):
         if 'templates' in base_file:
             cornice_files[idx] = cornice_files[idx].split('.')[0] + '.' + template
-
+    
     assert cornice_files == files

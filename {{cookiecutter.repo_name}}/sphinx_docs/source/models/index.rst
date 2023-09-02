@@ -2,5 +2,5 @@ Models
 ======
 
 
-.. automodule:: credit_engine.models
+.. automodule:: {{cookiecutter.repo_name}}.models
    :members:

@@ -10,46 +10,24 @@ from tests.utils import build_files_list, WIN, WORKING
 
 @pytest.mark.parametrize('docs', ["none", "sphinx"])
 @pytest.mark.parametrize('tasks', ["none", "celery"])
-@pytest.mark.parametrize('pyramid_services', ["none", "pyramid-services"])
+@pytest.mark.parametrize('services', ["none", "pyramid-services"])
 @pytest.mark.parametrize('rpc', ["none", "grpc"])
 @pytest.mark.parametrize('authentication', ["none", "jwt"])
 @pytest.mark.parametrize('schemas', ["none", "marshmallow"])
-@pytest.mark.parametrize('rest_framework', ["none", "cornice"])
-@pytest.mark.parametrize('backend', ["none", "sqlalchemy", "zodb"])
-@pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
-def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, pyramid_services, authentication, rpc, tasks, docs):
-
-    if backend != 'sqlalchemy':
-        return
-    
-    if rest_framework != 'cornice':
-        return
-
-    if schemas != 'marshmallow':
-        return
-
-    if pyramid_services != 'pyramid-services':
-        return
-
-    if authentication != 'jwt':
-        return
-
-    if rpc != 'grpc':
-        return
-
-    if tasks != 'celery':
-        return
-
-    if docs != 'sphinx':
-        return
+@pytest.mark.parametrize('rest', ["none", "cornice"])
+# @pytest.mark.parametrize('persistence', ["none", "sqlalchemy-sqlite", "sqlalchemy-postgres", "zodb"])
+@pytest.mark.parametrize('persistence', ["none", "sqlalchemy-postgres",])
+# @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
+@pytest.mark.parametrize('template', ['jinja2'])
+def test_base(cookies, venv, capfd, template, persistence, rest, schemas, services, authentication, rpc, tasks, docs):
 
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
-        'backend': backend,
-        'rest_framework': rest_framework,
+        'persistence': persistence,
+        'rest': rest,
         'schemas': schemas,
-        'pyramid_services': pyramid_services,
+        'services': services,
         'authentication': authentication,
         'rpc': rpc,
         'tasks': tasks,
@@ -83,6 +61,10 @@ def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, 
     subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
     subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
     subprocess.check_call([venv.bin + '/poetry', 'run', 'proutes', 'development.ini'], cwd=cwd)
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'proutes', 'production.ini'], cwd=cwd)
+
+    if docs == 'sphinx':
+        subprocess.check_call(['make', 'html'], cwd=os.path.join(str(result.project_path), 'docs'))
 
 
 def test_it_invalid_module_name(cookies, venv, capfd):

@@ -14,26 +14,27 @@ pyramid_{{ cookiecutter.template_language }} = "*"
 pyramid-retry = "*"
 pyramid_debugtoolbar = "*"
 pyramid-auto-env = "*"
-waitress = "*"
 gunicorn = "*"
 pyramid-services = "*"
-requests = "*"
 camel-converter = "*"
-{%- if cookiecutter.backend == 'sqlalchemy' %}
+{%- if cookiecutter.persistence.startswith('sqlalchemy') %}
 alembic = "*"
 pyramid_retry = "*"
 pyramid_tm = "*"
 SQLAlchemy = "*"
 transaction = "*"
 zope-sqlalchemy = "*"
-{%- elif cookiecutter.backend == 'zodb' %}
+{%- if cookiecutter.persistence == 'sqlalchemy-postgres' %}
+psycopg2-binary = "*"
+{%- endif %}
+{%- elif cookiecutter.persistence == 'zodb' %}
 pyramid_retry = "*"
 pyramid_tm = "*"
 pyramid_zodbconn = "*"
 transaction = "*"
 ZODB = "*"
 {%- endif %}
-{%- if cookiecutter.rest_framework == 'cornice' %}
+{%- if cookiecutter.rest == 'cornice' %}
 cornice = "*"
 pycornmarsh = "*"
 {%- endif %} 
@@ -41,6 +42,7 @@ pycornmarsh = "*"
 marshmallow = "*"
 {%- endif %}
 {%- if cookiecutter.authentication == 'jwt' %}
+requests = "*"
 pyramid-jwt = "*"
 pyjwt = {extras = ["crypto"], version = "*"}
 {%- endif %}
@@ -55,20 +57,22 @@ pyramid_celery = "*"
 {%- if cookiecutter.orchestrator == 'conductor' %}
 conductor-celery = "*"
 {%- endif %}
-
 {%- endif %}
 
 
 [tool.poetry.group.dev.dependencies]
+waitress = "*"
 pytest = "*"
 pytest-cov = "*"
 black = "*"
 webtest = "*"
 pytest-mock = "*"
-{%- if cookiecutter.backend == 'sqlalchemy' %}
-testing-postgresql = "*"
+{%- if cookiecutter.persistence.startswith('sqlalchemy') %}
 factory-boy = "*"
 pytest-factoryboy = "*"
+{%- if cookiecutter.persistence == 'sqlalchemy-postgres' %}
+testing-postgresql = "*"
+{%- endif %}
 {%- endif %}
 {%- if cookiecutter.rpc == 'grpc' %}
 pytest-grpc = "*"
@@ -88,10 +92,10 @@ main = "{{cookiecutter.repo_name}}:main"
 
 [tool.poetry.scripts]
 manage = '{{cookiecutter.repo_name}}.scripts.manage:cli'
-{%- if cookiecutter.backend == 'sqlalchemy' %}
+{%- if cookiecutter.persistence == 'sqlalchemy' %}
 initialize_db = '{{cookiecutter.repo_name}}.scripts.initialize_db:main'
 drop_db = '{{cookiecutter.repo_name}}.scripts.drop_db:main'
 {%- endif %}
 {%- if cookiecutter.rpc == 'grpc' %}
-grpc-server = 'pyramid_grpc.server:run'
+gserve = 'pyramid_grpc.server:run'
 {%- endif %}

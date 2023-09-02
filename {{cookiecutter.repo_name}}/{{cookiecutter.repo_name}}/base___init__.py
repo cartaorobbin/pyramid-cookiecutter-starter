@@ -1,7 +1,7 @@
 from pyramid.config import Configurator
 from pyramid_auto_env import autoenv_settings
 
-{%- if cookiecutter.backend == 'zodb' %}
+{%- if cookiecutter.persistence == 'zodb' %}
 from pyramid_zodbconn import get_connection
 
 from .models import appmaker
@@ -23,18 +23,18 @@ def main(global_config, **settings):
     """
     with Configurator(settings=settings) as config:
         config.include('pyramid_{{ cookiecutter.template_language }}')
-    {%- if cookiecutter.backend == 'zodb' %}
+    {%- if cookiecutter.persistence == 'zodb' %}
         config.include('pyramid_tm')
         config.include('pyramid_retry')
         config.include('pyramid_zodbconn')
     {%- endif %}
-    {%- if cookiecutter.rest_framework == 'cornice' %}
+    {%- if cookiecutter.rest == 'cornice' %}
         config.include('cornice')
     {%- endif %}
-    {%- if cookiecutter.backend == 'sqlalchemy' %}
+    {%- if cookiecutter.persistence.startswith('sqlalchemy') %}
         config.include('.models')
     {%- endif %}
-    {%- if cookiecutter.backend == 'zodb' %}
+    {%- if cookiecutter.persistence == 'zodb' %}
         config.set_root_factory(root_factory)
     {%- endif %}
     {%- if cookiecutter.authentication == 'jwt' %}
@@ -46,7 +46,7 @@ def main(global_config, **settings):
         config.include('.tasks')
     {%- endif %}
 
-    {%- if cookiecutter.pyramid_services == 'pyramid-services' %}
+    {%- if cookiecutter.services == 'pyramid-services' %}
         config.include('pyramid_services')
         config.include('.services')
     {%- endif %}

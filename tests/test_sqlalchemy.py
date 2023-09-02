@@ -12,7 +12,7 @@ def test_sqlalchemy(cookies, venv, capfd, template):
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
-        'backend': 'sqlalchemy',
+        'persistence': 'sqlalchemy-sqlite',
         'repo_name': 'myapp',
     })
 

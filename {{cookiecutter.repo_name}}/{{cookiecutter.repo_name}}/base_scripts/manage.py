@@ -20,7 +20,7 @@ def cli():
 
 @cli.command()
 @click.option(
-    "--url", default="http://localhost:6543/health", help="Number of greetings."
+    "--url", default="http://localhost:6543/health", help="Helth check."
 )
 def health(url):
     click.echo(f"checking {url} ...")
@@ -46,7 +46,7 @@ def pyramid_app(ctx, ini_location):
     request = env['request']
     closer = env['closer']
 
-    {%- if cookiecutter.backend == 'sqlalchemy' %}
+    {%- if cookiecutter.persistence == 'sqlalchemy' %}
     request.tm.begin()
 
     ctx.obj = Context(pyramid_app=app,pyramid_request=request)

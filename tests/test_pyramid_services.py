@@ -13,7 +13,7 @@ def test_pyramid_services(cookies, venv, capfd, template):
         'project_name': 'Test Project',
         'template_language': template,
         'backend': 'none',
-        'pyramid_services': 'pyramid-services',
+        'services': 'pyramid-services',
         'repo_name': 'myapp',
     })
 

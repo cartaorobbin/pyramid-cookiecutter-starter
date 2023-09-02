@@ -1,4 +1,4 @@
-{%- if cookiecutter.rest_framework == 'cornice' %}
+{%- if cookiecutter.rest == 'cornice' %}
 from pycornmarsh import get_spec
 
 

@@ -2,14 +2,14 @@
     "project_name": "Pyramid Scaffold",
     "repo_name": "{{cookiecutter.project_name.lower().strip().replace(' ', '_').replace(':', '_').replace('-', '_').replace('!', '_')}}",
     "template_language": ["jinja2", "chameleon", "mako"],
-    "backend": ["none", "sqlalchemy", "zodb"],
-    "rest_framework": ["none", "cornice"],
+    "persistence": ["none", "sqlalchemy-postgres", "sqlalchemy-sqlite", "zodb"],
+    "rest": ["none", "cornice"],
     "schemas": ["none", "marshmallow"],
     "authentication": ["none", "jwt"],
     "rpc": ["none", "grpc"],
     "tasks": ["none", "celery"],
     "orchestrator": ["none", "conductor"],
-    "pyramid_services": ["none", "pyramid-services"],
+    "services": ["none", "pyramid-services"],
     "docs": ["none", "sphinx"],
     "_copy_without_render": [
         "static/*"

@@ -27,7 +27,7 @@ RUN sudo apt-get update
 RUN sudo apt install iputils-ping
 RUN curl -sfL https://direnv.net/install.sh | bash
 RUN apt update
-{%- if cookiecutter.backend == 'sqlalchemy' %}
+{%- if cookiecutter.persistence == 'sqlalchemy-postgres' %}
 RUN apt install postgresql -y
 {%- endif %}
 
