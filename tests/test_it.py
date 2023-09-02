@@ -8,6 +8,7 @@ from tests.expected_files import base_files, sqlalchemy_files, zodb_files, pyram
 from tests.utils import build_files_list, WIN, WORKING
 
 
+@pytest.mark.parametrize('docs', ["none", "sphinx"])
 @pytest.mark.parametrize('tasks', ["none", "celery"])
 @pytest.mark.parametrize('pyramid_services', ["none", "pyramid-services"])
 @pytest.mark.parametrize('rpc', ["none", "grpc"])
@@ -16,7 +17,7 @@ from tests.utils import build_files_list, WIN, WORKING
 @pytest.mark.parametrize('rest_framework', ["none", "cornice"])
 @pytest.mark.parametrize('backend', ["none", "sqlalchemy", "zodb"])
 @pytest.mark.parametrize('template', ['jinja2', 'mako', 'chameleon'])
-def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, pyramid_services, authentication, rpc, tasks):
+def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, pyramid_services, authentication, rpc, tasks, docs):
 
     if backend != 'sqlalchemy':
         return
@@ -39,6 +40,9 @@ def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, 
     if tasks != 'celery':
         return
 
+    if docs != 'sphinx':
+        return
+
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
@@ -49,6 +53,7 @@ def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, 
         'authentication': authentication,
         'rpc': rpc,
         'tasks': tasks,
+        'docs': docs,
         'repo_name': 'myapp',
     })
 
@@ -74,11 +79,10 @@ def test_base(cookies, venv, capfd, template, backend, rest_framework, schemas, 
 
     # venv.install(cwd, editable=True, upgrade=True)
     subprocess.call([venv.bin + '/pip', 'install', 'poetry'], cwd=cwd)
-    subprocess.call([venv.bin + '/poetry', 'install', ], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'config', 'virtualenvs.create', 'false', '--local'], cwd=cwd)
     subprocess.call([venv.bin + '/poetry', 'install'], cwd=cwd)
     subprocess.check_call([venv.bin + '/poetry', 'run', 'pytest'], cwd=cwd)
-
+    subprocess.check_call([venv.bin + '/poetry', 'run', 'proutes', 'development.ini'], cwd=cwd)
 
 
 def test_it_invalid_module_name(cookies, venv, capfd):

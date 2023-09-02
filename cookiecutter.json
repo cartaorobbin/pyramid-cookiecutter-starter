@@ -10,6 +10,7 @@
     "tasks": ["none", "celery"],
     "orchestrator": ["none", "conductor"],
     "pyramid_services": ["none", "pyramid-services"],
+    "docs": ["none", "sphinx"],
     "_copy_without_render": [
         "static/*"
     ]

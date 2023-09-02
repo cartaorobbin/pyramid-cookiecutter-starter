@@ -17,6 +17,7 @@ def main():
     clean_unused_rpc()
     clean_unused_task()
     clean_unused_orchestrator()
+    clean_unused_docs()
 
 def clean_unused_template_settings():
     selected_lang = '{{ cookiecutter.template_language }}'
@@ -77,6 +78,18 @@ def clean_unused_task():
         prefix = 'celery_'
         rm_prefixes = ['regular_']
     delete_other_files(WORKING, prefix, rm_prefixes)
+
+def clean_unused_docs():
+    selected = '{{ cookiecutter.docs }}'
+
+    if  selected == 'none':
+        prefix = 'regular_'
+        rm_prefixes = ['sphinx_']
+    else:
+        prefix = 'sphinx_'
+        rm_prefixes = ['regular_']
+    delete_other_files(WORKING, prefix, rm_prefixes)
+
 
 def clean_unused_orchestrator():
     selected = '{{ cookiecutter.orchestrator }}'

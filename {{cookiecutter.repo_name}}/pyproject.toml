@@ -52,6 +52,10 @@ grpcio-tools = "*"
 {%- endif %}
 {%- if cookiecutter.tasks == 'celery' %}
 pyramid_celery = "*"
+{%- if cookiecutter.orchestrator == 'conductor' %}
+conductor-celery = "*"
+{%- endif %}
+
 {%- endif %}
 
 
@@ -70,6 +74,10 @@ pytest-factoryboy = "*"
 pytest-grpc = "*"
 python-jose = "*"
 {%- endif %}
+{%- if cookiecutter.docs == 'sphinx' %}
+sphinx = "7.2.4"
+{%- endif %}
+
 
 [build-system]
 requires = ["poetry-core"]

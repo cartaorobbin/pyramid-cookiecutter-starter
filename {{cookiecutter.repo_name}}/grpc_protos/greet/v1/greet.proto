@@ -4,6 +4,8 @@ package greet.v1;
 
 service Greeter {
     rpc SayHello (HelloRequest) returns (HelloReply) {}
+    rpc SayHelloSecure (HelloRequest) returns (HelloReply) {}
+    
 }
 
 message HelloRequest {
