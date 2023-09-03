@@ -1,8 +1,12 @@
 import argparse
 import sys
+import alembic
 
 from pyramid.paster import bootstrap, setup_logging
 from sqlalchemy.exc import OperationalError
+import alembic.config
+import alembic.command
+from ..models.meta import Base
 
 from .. import models
 
@@ -12,8 +16,7 @@ def setup_models(dbsession):
     Add or update models / fixtures in the database.
 
     """
-    model = models.mymodel.MyModel(name='one', value=1)
-    dbsession.add(model)
+    pass
 
 
 def parse_args(argv):
@@ -33,6 +36,9 @@ def main(argv=sys.argv):
     try:
         with env['request'].tm:
             dbsession = env['request'].dbsession
+            Base.metadata.create_all(bind=dbsession.get_bind())
+            alembic_cfg = alembic.config.Config(args.config_uri)
+            alembic.command.stamp(alembic_cfg, "head")
             setup_models(dbsession)
     except OperationalError:
         print('''

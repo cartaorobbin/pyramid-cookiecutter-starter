@@ -96,10 +96,10 @@ main = "{{cookiecutter.repo_name}}:main"
 
 [tool.poetry.scripts]
 manage = '{{cookiecutter.repo_name}}.scripts.manage:cli'
-{%- if cookiecutter.persistence == 'sqlalchemy' %}
+{%- if cookiecutter.persistence.startswith('sqlalchemy') %}
 initialize_db = '{{cookiecutter.repo_name}}.scripts.initialize_db:main'
 drop_db = '{{cookiecutter.repo_name}}.scripts.drop_db:main'
 {%- endif %}
 {%- if cookiecutter.rpc == 'grpc' %}
-gserve = 'pyramid_grpc.server:run'
+gserve = 'pyramid_grpc.main:run'
 {%- endif %}

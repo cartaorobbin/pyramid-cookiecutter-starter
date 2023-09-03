@@ -2,6 +2,7 @@
 from alembic import context
 from pyramid.paster import get_appsettings, setup_logging
 from sqlalchemy import engine_from_config
+from pyramid_auto_env import replace
 
 from {{ cookiecutter.repo_name }}.models.meta import Base
 
@@ -9,7 +10,8 @@ config = context.config
 
 setup_logging(config.config_file_name)
 
-settings = get_appsettings(config.config_file_name)
+settings = replace("{{cookiecutter.repo_name | upper}}", **get_appsettings(config.config_file_name))
+
 target_metadata = Base.metadata
 
 
