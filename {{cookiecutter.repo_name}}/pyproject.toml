@@ -76,11 +76,15 @@ testing-postgresql = "*"
 {%- endif %}
 {%- if cookiecutter.rpc == 'grpc' %}
 pytest-grpc = "*"
-python-jose = "*"
 {%- endif %}
 {%- if cookiecutter.docs == 'sphinx' %}
 sphinx = "7.2.4"
 {%- endif %}
+{%- if cookiecutter.authentication == 'jwt' %}
+python-jose = "*"
+{%- endif %}
+responses = "*"
+pytest-responses = "*"
 
 
 [build-system]
