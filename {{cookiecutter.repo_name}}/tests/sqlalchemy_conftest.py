@@ -42,8 +42,13 @@ def app_settings(ini_file):
     return get_appsettings(ini_file)
 
 
-@pytest.fixture(scope='session')
+
+@pytest.fixture(scope='module')
+{%- if cookiecutter.authentication == 'jwt' %}
+def app(mock_public_jwks, app_settings, dbengine):
+{%- else %}
 def app(app_settings, dbengine):
+{%- endif %}
     return main({}, dbengine=dbengine, **app_settings)
 
 

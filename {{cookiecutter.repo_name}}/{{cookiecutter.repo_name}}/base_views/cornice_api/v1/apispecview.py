@@ -8,7 +8,7 @@ def api_spec(request):
         title="{{cookiecutter.repo_name}} Service",
         version="1.0.0",
         description="""
-        Generates a apispec to api v2 containing endpoints, schemas and can you test the requests
+        Generates a apispec to api v1 containing endpoints, schemas and can you test the requests
         """,
         {%- if cookiecutter.authentication == 'jwt' %}
         security_scheme={
