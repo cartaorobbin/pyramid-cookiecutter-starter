@@ -11,8 +11,8 @@ def test_jwt(cookies, venv, capfd, template):
     result = cookies.bake(extra_context={
         'project_name': 'Test Project',
         'template_language': template,
-        'backend': 'none',
-        'pyramid_services': 'pyramid-services',
+        'persistence': 'none',
+        'services': 'pyramid-services',
         'authentication': 'jwt',
         'repo_name': 'myapp',
     })
