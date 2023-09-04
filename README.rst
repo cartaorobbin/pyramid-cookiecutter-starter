@@ -43,7 +43,7 @@ Usage
 
     .. code-block:: bash
 
-        $ cookiecutter gh:Pylons/pyramid-cookiecutter-starter --checkout main
+        $ cookiecutter gh:cartaorobbin/pyramid-cookiecutter-starter --checkout main
 
 #.  Create a virtual environment, upgrade packaging tools, and install your new project and its dependencies.
     These steps are output to the console and are written to the file in ``<my_project>/README.txt`` by the cookiecutter, and are slightly different for Windows.
