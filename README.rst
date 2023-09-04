@@ -37,7 +37,7 @@ Usage
 
     .. code-block:: bash
 
-        $ cookiecutter gh:Pylons/pyramid-cookiecutter-starter
+        $ cookiecutter gh:cartaorobbin/pyramid-cookiecutter-starter
 
     Optionally append a specific branch checkout to the command:
 
