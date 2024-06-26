@@ -17,7 +17,7 @@ Customizable options upon install include choice of:
 Requirements
 ------------
 
-*   Python 3.6+
+*   Python 3.10+
 *   `cookiecutter <https://cookiecutter.readthedocs.io/en/latest/installation.html>`_
 
 Versions
@@ -53,16 +53,8 @@ Usage
         # Change directory into your newly created project if not already there. Your
         # current directory should be the same as this README.txt file and setup.py.
         $ cd <my_project>
-        # Create a Python virtual environment, if not already created.
-        $ python3 -m venv env
-        # Upgrade packaging tools.
-        $ env/bin/pip install --upgrade pip setuptools
-        # Install the project in editable mode with its testing requirements.
-        $ env/bin/pip install -e ".[testing]"
-        # The previous step installs the latest stable release of Pyramid.
-        # Optionally install a specific version of Pyramid.
-        # For example, the unreleased version of the main branch:
-        env/bin/pip install -e git+https://github.com/pylons/pyramid.git@main#egg=pyramid
+        # Install the packages using poetry
+        $ poetry install
 
 #.  If you selected ``sqlalchemy`` as a backend, there will be additional steps in the output and ``README.txt``.
 
@@ -70,10 +62,10 @@ Usage
 
     .. code-block:: bash
 
-        $ env/bin/pytest
+        $ poetry run pytest
 
 #.  Run your project.
 
     .. code-block:: bash
 
-        $ env/bin/pserve development.ini
+        $ poetry run pserve development.ini
