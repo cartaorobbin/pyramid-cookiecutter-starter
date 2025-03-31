@@ -6,14 +6,20 @@ services:
       # array). The sample below assumes your primary file is in the root of your project.
     build:
       context: .
-      dockerfile: .devcontainer/Dockerfile
+      dockerfile: Dockerfile
       args:
         VARIANT: "ubuntu-22.04"
+    {%- if cookiecutter.tasks == 'celery' or cookiecutter.persistence == 'sqlalchemy-postgres' %}
     links:
+    {%- if cookiecutter.tasks == 'celery' %}
       - redis:rs
+    {%- endif %}
+      {%- if cookiecutter.persistence == 'sqlalchemy-postgres' %}
       - postgres:postgresdb
+      {%- endif %}
+    {% endif %}
     volumes:
-      - .:/workspace:cached
+      - ..:/{{ cookiecutter.repo_name }}:cached
       - bashhistory:/commandhistory
     command: /bin/sh -c "while sleep 1000; do :; done"
     networks:
@@ -39,7 +45,7 @@ services:
     restart: unless-stopped
 
   {%- endif %}
-
+  {%- if cookiecutter.tasks == 'celery' %}
   redis:
     image: redis:6.2-alpine
     restart: always
@@ -52,11 +58,15 @@ services:
     command: redis-server --loglevel warning
     volumes: 
       - redis:/data
-
+  {%- endif %}
 networks:
   internal:
 
 volumes:
+{%- if cookiecutter.persistence == 'sqlalchemy-postgres' %}
     postgres:
+ {%- endif %}
+  {%- if cookiecutter.tasks == 'celery' %}
     redis:
+  {%- endif %}
     bashhistory:

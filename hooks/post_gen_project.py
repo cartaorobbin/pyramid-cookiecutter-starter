@@ -9,7 +9,6 @@ WORKING = os.path.abspath(os.path.curdir)
 def main():
     clean_unused_template_settings()
     clean_unused_persistence()
-    display_actions_message()
     clean_unused_rest_framework()
     clean_unused_pyramid_services()
     clean_unused_schemas()
@@ -18,6 +17,7 @@ def main():
     clean_unused_task()
     clean_unused_orchestrator()
     clean_unused_docs()
+    display_actions_message()
 
 def clean_unused_template_settings():
     selected_lang = '{{ cookiecutter.template_language }}'

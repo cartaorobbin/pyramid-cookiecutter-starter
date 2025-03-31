@@ -1,0 +1,125 @@
+name: Docker Image CI
+on:
+  push:
+    branches: ["staging", "production"]
+
+jobs:
+  prepare: 
+    if: github.ref == 'refs/heads/staging' || github.ref == 'refs/heads/production'
+    runs-on: ubuntu-latest
+    steps:
+      - id: setvars
+        run: |
+          service={{ cookiecutter.repo_name }}
+          cluster=robbin
+
+          {% raw %}if [[ "${{github.base_ref}}" == "production" || "${{github.ref}}" == "refs/heads/production" ]]{% endraw %}
+          then
+            environment=production
+            echo "aws_account_id=437064537111" >> "$GITHUB_OUTPUT"
+          else
+            environment=staging
+            echo "aws_account_id=906828889059" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "service=$service" >> "$GITHUB_OUTPUT"
+          echo "environment=$environment" >> "$GITHUB_OUTPUT"
+          echo "prefix=$environment-$service" >> "$GITHUB_OUTPUT"
+          echo "cluster=$environment-$cluster" >> "$GITHUB_OUTPUT"
+    outputs:
+      {% raw %}
+      aws_account_id: ${{ steps.setvars.outputs.aws_account_id }}
+      cluster: ${{ steps.setvars.outputs.cluster }}
+      environment: ${{ steps.setvars.outputs.environment }}
+      prefix: ${{ steps.setvars.outputs.prefix }}
+      service: ${{ steps.setvars.outputs.service }}
+      {% endraw %}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: prepare
+    permissions:
+      id-token: write
+      contents: read
+    outputs:
+      {% raw %}image: ${{ steps.build-image.outputs.image }}{% endraw %}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check code meets quality standards
+        id: datadog-static-analysis
+        uses: DataDog/datadog-static-analyzer-github-action@v1
+        with:
+          {% raw %}
+          dd_app_key: ${{ secrets.DD_APP_KEY }}
+          dd_api_key: ${{ secrets.DD_API_KEY }}
+          dd_service: ${{ needs.prepare.outputs.service }}
+          {% endraw %}
+          dd_env: "ci"
+          dd_site: "datadoghq.com"
+          cpu_count: 2
+          enable_performance_statistics: false
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          {% raw %}
+          role-to-assume: arn:aws:iam::${{ needs.prepare.outputs.aws_account_id }}:role/github
+          aws-region: us-east-1
+          {% endraw %}
+
+      - id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - id: build-image
+        env:
+          {% raw %}
+          REPOSITORY: ${{ steps.login-ecr.outputs.registry }}/${{ needs.prepare.outputs.service }}
+          IMAGE: ${{ steps.login-ecr.outputs.registry }}/${{ needs.prepare.outputs.service }}:${{ github.sha }}
+          BRANCH: ${{ github.ref_name }}
+          {% endraw %}
+        run: |
+          docker build -t $IMAGE .
+          docker tag $IMAGE $REPOSITORY:$BRANCH
+          docker push $IMAGE
+          docker push $REPOSITORY:$BRANCH
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build, prepare]
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          {% raw %}
+          role-to-assume: arn:aws:iam::${{ needs.prepare.outputs.aws_account_id }}:role/github
+          aws-region: us-east-1
+          {% endraw %}
+
+      - env:
+        {% raw %}
+          PREFIX: ${{ needs.prepare.outputs.prefix }}
+          {% endraw %}
+        run: |
+          aws ecs describe-task-definition --task-definition "${PREFIX}" --query taskDefinition > task-definition.json
+
+      - id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.2.0
+        with:
+          task-definition: task-definition.json
+          container-name: service
+          {% raw %}
+          image: ${{ needs.build.outputs.image }}
+          {% endraw %}
+
+      - uses: aws-actions/amazon-ecs-deploy-task-definition@v2.2.0
+        with:
+          {% raw %}
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ needs.prepare.outputs.prefix }}
+          cluster: ${{ needs.prepare.outputs.cluster }}
+          wait-for-service-stability: false
+          {% endraw %}
+

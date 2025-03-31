@@ -7,4 +7,5 @@ fi
 
 poetry config virtualenvs.create true
 poetry install
+poetry self add poetry-plugin-shell
 poetry shell
